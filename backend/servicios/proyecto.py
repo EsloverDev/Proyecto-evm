@@ -2,6 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from backend.modelos.proyecto import Proyecto
+from backend.modelos.actividad import Actividad
 from backend.esquemas.proyecto import ProyectoCrear, ProyectoActualizar
 
 
@@ -32,6 +33,26 @@ def obtener_proyecto(
 ) -> Proyecto | None:
     consulta = select(Proyecto).where(Proyecto.id == id_proyecto)
     return session.scalar(consulta)
+
+
+def obtener_detalle_proyecto(
+    id_proyecto: int,
+    session: Session
+):
+    proyecto = obtener_proyecto(id_proyecto, session)
+
+    if proyecto is None:
+        return None
+
+    consulta = select(Actividad).where(Actividad.proyecto_id == id_proyecto)
+    actividades = list(session.scalars(consulta).all())
+
+    return {
+        "id": proyecto.id,
+        "nombre": proyecto.nombre,
+        "descripcion": proyecto.descripcion,
+        "actividades": actividades
+    }
 
 
 def actualizar_proyecto(
