@@ -9,6 +9,7 @@ from backend.servicios.proyecto import (
     eliminar_proyecto,
     listar_proyectos,
     obtener_proyecto,
+    obtener_detalle_proyecto
 )
 
 router = APIRouter()
@@ -44,7 +45,7 @@ def obtener_proyecto_por_id(
     id_proyecto: int,
     session: Session = Depends(get_db_session)
 ):
-    proyecto = obtener_proyecto(id_proyecto, session)
+    proyecto = obtener_detalle_proyecto(id_proyecto, session)
 
     if proyecto is None:
         raise HTTPException(
